@@ -24,3 +24,17 @@
 .custom_slider .navs .prev_slide {
   margin-right: 20px;
 }
+.custom_slider .generaldots {
+  display: flex;
+  justify-content: center;
+}
+.custom_slider .dot {
+  width: 10px;
+  height: 10px;
+  background-color: #949393;
+  border-radius: 10px;
+  margin: 10px;
+}
+.custom_slider .dot:hover {
+  background-color: #5c5a5a;
+}

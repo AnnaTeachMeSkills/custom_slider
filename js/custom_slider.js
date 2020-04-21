@@ -6,6 +6,9 @@ const defaultSettings = {
     loop: true,
     autoplay: true,
     timeout: 2000,
+    dots: false,
+    margin: 10,
+    onHover: true,
 } 
 
 
@@ -23,8 +26,16 @@ customSliderArray.forEach(item => item.customSlider = function(sliderSettings = 
     const loop = (sliderSettings.loop !== undefined) ? sliderSettings.loop : defaultSettings.loop;
     const autoplay = (sliderSettings.loop !== undefined) ? sliderSettings.autoplay : defaultSettings.autoplay;
     const timeout = sliderSettings.timeout || defaultSettings.timeout;
+    const dots = (sliderSettings.dots !== undefined) ? sliderSettings.dots : defaultSettings.dots;
+    const margin = sliderSettings.margin || defaultSettings.margin;
+    const onHover = (sliderSettings.onHover !== undefined) ? sliderSettings.onHover : defaultSettings.onHover;
 
-    buildSlider(item, slidesOffset, slideHeight, slides, navs);
+    buildSlider(item, slidesOffset, slideHeight, slides, navs,margin);
+
+    if (dots) {
+       Dots(); 
+    }
+    
 
     let outerContainer = item.querySelector('.outer_container');
     outerContainer.style.width = `${slidesOffset * maxSlides}px`;
@@ -78,18 +89,78 @@ customSliderArray.forEach(item => item.customSlider = function(sliderSettings = 
                 let innerContainer = item.querySelector('.inner_container');
                 innerContainer.style.transform = `translate(${moveNum}px, 0)`;
             }
+            
         }
-        setInterval(moveSlide, timeout)
+        
+        let timerId;
+        let innerContainer = item.querySelector('.inner_container');
+        let oneSlide =  innerContainer.querySelectorAll('.one_slide')
+        
+        function x () {
+            timerId = setInterval(moveSlide, timeout);
+        }
+
+        x()
+
+        if(onHover){
+            oneSlide.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                setTimeout(() => { clearInterval(timerId)});
+            })
+            item.addEventListener('mouseleave', () => {
+                x()
+            })
+        })}
+        
     } 
+
+
+    
+
+
+    function Dots () {
+        let customSlider = item;
+        let innerContainer = item.querySelector('.inner_container');
+        let generalDots = document.createElement('div');
+        generalDots.classList.add('generaldots');
+        customSlider.append(generalDots);
+        let dots = item.querySelectorAll('.one_slide');
+        let arrayDots = []
+        for (i=0; i<dots.length; i++) {
+            let dotsimg = document.createElement('div');
+            dotsimg.classList.add('dot')
+            generalDots.append(dotsimg);
+            arrayDots.push(dotsimg);
+            dotsimg.dataset.number = i;
+        };
+
+        let innerArray= Array.from(innerContainer.children); 
+        console.log(innerArray)
+        j =0;
+        innerArray.forEach(item => {
+            item.dataset.number = j++;
+        });
+        
+       
+        item.addEventListener('click', (e) =>{
+            event = e.target;
+            innerArray.forEach(item => {
+                if ((event.getAttribute('data-number')) == (item.getAttribute('data-number'))){
+                    innerContainer.style.transform = `translate(${-slidesOffset *item.getAttribute('data-number')}px, 0)`
+                }
+            });
+        });
+    }
    
 })
 
  
-function buildSlider(slider, slideWidth, slideHeight, slides, navs) {
+function buildSlider(slider, slideWidth, slideHeight, slides, navs, margin) {
     slides.forEach(item => {
         item.classList.add('one_slide');
-        item.style.width = `${slideWidth}px`;
-        item.style.height = `${slideHeight}px`;
+        item.style.width = `${slideWidth-margin*2}px`;
+        item.style.height = `${slideHeight }px`;
+        item.style.margin = `${margin}px`;
     });
 
     slider.innerHTML = `        
@@ -105,3 +176,7 @@ function buildSlider(slider, slideWidth, slideHeight, slides, navs) {
         </div>`
         }
 }
+
+
+
+

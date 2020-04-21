@@ -7,5 +7,10 @@ main.customSlider({
     loop: true,
     autoplay: true,
     timeout: 2000,
+    dots: true,
+    margin: 10,
+    onHover: true,
 });
+
+
 
