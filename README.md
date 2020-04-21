@@ -63,3 +63,6 @@ If called without parameters, the default values will be set.
 | loop     | boolean    | true | Infinite looping|
 | autoplay     | boolean    | true | Enables auto play of slides|
 | timeout    | number    | 2000 | Auto play change interval|
+| dots    | boolean    | true | Current slide indicator dots|
+| margin    | number    | 10 | External indent of slide|
+| onHover    | boolean    | true | Pauses autoplay on hover|
